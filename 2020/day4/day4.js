@@ -42,6 +42,7 @@
 // Count the number of valid passports - those that have all required fields. Treat cid as optional. In your batch file, how many passports are valid?
 
 import fs from 'fs'
+import { isContext } from 'vm'
 
 let data = fs.readFileSync('day4.txt')
 
@@ -51,7 +52,6 @@ const validatePassport = (data) => {
   return data
     .toString()
     .split('\n\n')
-    .slice(0, 20)
     .map((passport) =>
       passport
         .replace(/\n/g, ' ')
@@ -80,46 +80,54 @@ const validatePassport = (data) => {
 // pid (Passport ID) - a nine-digit number, including leading zeroes.
 // cid (Country ID) - ignored, missing or not.
 
-const validateHCL = (hcl) => {}
+const validatePID = (data) => {
+  if (data.match(/[0-9]{9}\b/)) {
+    return 0
+  }
+  return -1
+}
+
+const validateECL = (ecl) => {
+  if (ecl.match(/(amb|blu|brn|gry|grn|hzl|oth)\b/)) {
+    return 0
+  }
+  return -1
+}
+
+const validateHCL = (hcl) => {
+  if (hcl.match(/#[a-f0-9]{6}/)) {
+    return 0
+  }
+  return -1
+}
 
 const validateHGT = (hgt) => {
-  if (hgt.slice(-2) !== 'cm' && hgt.slice(-2) !== 'in') {
-    return -1
+  if (hgt.match(/((59|6[0-9]|7[0-6])in|(1[5-8][0-9]|19[0-3])cm\b)/)) {
+    return 0
   }
-  if (isNaN(+hgt.slice(0, -2)) || +hgt.slice(0, -2) >= 0) {
-    return -1
-  }
-  return 0
+  return -1
 }
 
 const validateEYR = (eyr) => {
-  if (eyr.length !== 4) {
-    return -1
+  if (eyr.match(/(202[0-9]|2030)\b/)) {
+    return 0
   }
-  if (+eyr < 2020 || +eyr > 2030) {
-    return -1
-  }
-  return 0
+  return -1
 }
 
 const validateIYR = (iyr) => {
-  if (iyr.length !== 4) {
-    return -1
+  if (iyr.match(/(201[0-9]|2020)/)) {
+    return 0
   }
-  if (+iyr < 2010 || +iyr > 2020) {
-    return -1
-  }
-  return 0
+  return -1
 }
 
 const validateBYR = (byr) => {
-  if (byr.length !== 4) {
-    return -1
+  console.log(byr)
+  if (byr.match(/(19[2-9][0-9]|200[0-2])/)) {
+    return 0
   }
-  if (+byr < 1920 || +byr > 2002) {
-    return -1
-  }
-  return 0
+  return -1
 }
 
 const validatePassportData = (data) => {
@@ -128,28 +136,62 @@ const validatePassportData = (data) => {
     passport.forEach((attribute) => {
       switch (attribute[0]) {
         case 'byr':
-          // isValid += validateBYR(attribute[1])
+          isValid += validateBYR(attribute[1])
           break
         case 'iyr':
-          // isValid += validateIYR(attribute[1])
+          isValid += validateIYR(attribute[1])
           break
         case 'eyr':
-          // isValid += validateEYR(attribute[1])
+          isValid += validateEYR(attribute[1])
           break
         case 'hgt':
-          // isValid += validateHGT(attribute[1])
+          isValid += validateHGT(attribute[1])
           break
         case 'hcl':
+          isValid += validateHCL(attribute[1])
           break
         case 'ecl':
+          isValid += validateECL(attribute[1])
           break
         case 'pid':
+          isValid += validatePID(attribute[1])
           break
         default:
       }
     })
+
+    if (isValid < 0) {
+      isValid = 0
+    }
+
     return isValid
   })
 }
 
-console.table(validatePassportData(data))
+const validatePassportAtt = (data, att) => {
+  const requiredAttributes = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid']
+
+  return data
+    .toString()
+    .split('\n\n')
+    .map((passport) =>
+      passport
+        .replace(/\n/g, ' ')
+        .split(' ')
+        .map((attribute) => attribute.split(':'))
+    )
+    .slice(0, 25)
+    .map((passport) => {
+      for (const att of requiredAttributes) {
+        if (!passport.map((pass) => pass[0]).includes(att)) {
+          return 0
+        }
+      }
+      return passport
+    })
+    .filter((passport) => passport !== 0)
+    .map((passport) => passport.filter((i) => i[0] == att))
+}
+
+console.table(validatePassportAtt(data, 'pid'))
+console.table(validatePassportData(data).reduce((acc, idx) => acc + idx, 0))
