@@ -40,48 +40,97 @@ const rules = data
     rulePairs.push(
       rule
         .split(' ')
-        .slice(5, -1)
-        .filter((color) => !/\d/.test(color) && !/bags/.test(color))
+        .slice(4, -1)
+        .filter((color) => !/bags/.test(color) && !/bag/.test(color))
         .map((rule, idx, array) =>
-          idx % 2 === 0 ? rule + ' ' + array[idx + 1] : ''
+          idx % 3 === 0 ? [rule, array[idx + 1] + ' ' + array[idx + 2]] : ''
         )
         .filter((color) => color !== '')
     )
     return rulePairs
   })
 
-const dfs = (rule, rules, visited = new Set()) => {
-  const goldenBag = 'shiny gold'
-  let isGolden = 0
-  visited.add(rule)
-
-  // console.log(rules.get(rule))
-  rules.get(rule).forEach((bag) => {
-    console.log(bag)
-    if (isGolden !== 1) {
-      if (bag === goldenBag) {
-        isGolden = 1
-      }
-
-      if (!visited.has(bag)) {
-        visited.add(bag)
-        isGolden += dfs(bag, rules, visited)
-      }
-    }
-  })
-  return isGolden
-}
-
 const findGoldenBags = (rules) => {
   let numBags = 0
 
   for (const [ruleKey, ruleValue] of rules) {
     numBags += dfs(ruleKey, rules)
+    console.log(ruleKey)
   }
   return numBags
 }
 
-const rulesMap = new Map([...rules.slice(0, 20)])
+const dfs = (rule, rules, visited = new Set()) => {
+  const goldenBag = 'shiny gold'
+  let isGolden = 0
+  visited.add(rule)
 
-console.log(rulesMap)
-console.log(findGoldenBags(rulesMap))
+  if (!rules.get(rule)) {
+    return 0
+  }
+
+  const colors = rules.get(rule)
+
+  for (const color of colors) {
+    if (color === goldenBag) {
+      return 1
+    }
+    if (!visited.has(color)) {
+      isGolden += dfs(color, rules, visited)
+    }
+  }
+  return isGolden >= 1 ? 1 : 0
+}
+
+const rulesMap = new Map([...rules])
+
+const dfsGolden = (rules, bag) => {
+  let bagCount = 0
+  const bags = rules.get(bag)
+
+  return bagCount
+}
+
+const howManyGoldBags = (rules) => {
+  return dfsGolden(rules, 'shiny gold')
+}
+
+console.table(rulesMap)
+console.log(howManyGoldBags(rulesMap))
+// const testMap = new Map()
+// testMap.set('a', ['b', 'c'])
+// testMap.set('b', ['d', 'c'])
+// testMap.set('c', ['d', 'shiny gold'])
+// testMap.set('d', [])
+// testMap.set('shiny gold', [])
+
+// console.table(rulesMap)
+// console.log(findGoldenBags(rulesMap))
+// console.table(testMap)
+// console.log(findGoldenBags(testMap))
+// -------------------------------------------------
+// --- Part Two ---
+// It's getting pretty expensive to fly these days - not because of ticket prices, but because of the ridiculous number of bags you need to buy!
+
+// Consider again your shiny gold bag and the rules from the above example:
+
+// faded blue bags contain 0 other bags.
+// dotted black bags contain 0 other bags.
+// vibrant plum bags contain 11 other bags: 5 faded blue bags and 6 dotted black bags.
+// dark olive bags contain 7 other bags: 3 faded blue bags and 4 dotted black bags.
+// So, a single shiny gold bag must contain 1 dark olive bag (and the 7 bags within it) plus 2 vibrant plum bags (and the 11 bags within each of those): 1 + 1*7 + 2 + 2*11 = 32 bags!
+
+// Of course, the actual rules have a small chance of going several levels deeper than this example; be sure to count all of the bags, even if the nesting becomes topologically impractical!
+
+// Here's another example:
+
+// shiny gold bags contain 2 dark red bags.
+// dark red bags contain 2 dark orange bags.
+// dark orange bags contain 2 dark yellow bags.
+// dark yellow bags contain 2 dark green bags.
+// dark green bags contain 2 dark blue bags.
+// dark blue bags contain 2 dark violet bags.
+// dark violet bags contain no other bags.
+// In this example, a single shiny gold bag must contain 126 other bags.
+
+// How many individual bags are required inside your single shiny gold bag?
