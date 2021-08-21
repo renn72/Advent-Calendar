@@ -50,6 +50,38 @@ const rules = data
     return rulePairs
   })
 
-const dfs = (rules) => {}
+const dfs = (rule, rules, visited = new Set()) => {
+  const goldenBag = 'shiny gold'
+  let isGolden = 0
+  visited.add(rule)
 
-console.log(rules.slice(0, 15))
+  // console.log(rules.get(rule))
+  rules.get(rule).forEach((bag) => {
+    console.log(bag)
+    if (isGolden !== 1) {
+      if (bag === goldenBag) {
+        isGolden = 1
+      }
+
+      if (!visited.has(bag)) {
+        visited.add(bag)
+        isGolden += dfs(bag, rules, visited)
+      }
+    }
+  })
+  return isGolden
+}
+
+const findGoldenBags = (rules) => {
+  let numBags = 0
+
+  for (const [ruleKey, ruleValue] of rules) {
+    numBags += dfs(ruleKey, rules)
+  }
+  return numBags
+}
+
+const rulesMap = new Map([...rules.slice(0, 20)])
+
+console.log(rulesMap)
+console.log(findGoldenBags(rulesMap))
