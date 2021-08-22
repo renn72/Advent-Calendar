@@ -252,7 +252,7 @@ vibrant turquoise bags contain 2 drab silver bags.
 clear cyan bags contain 5 shiny green bags, 4 dark chartreuse bags.
 dotted tan bags contain 4 vibrant blue bags.
 mirrored brown bags contain 3 faded olive bags.
-bright bronze bags contain 4 light yellow bags, 1 mirrored orange bag, 3 light silver bags.
+bright bronze bags contain 4 light yellow bags, 1 mirrored orange bag, 5 light silver bags.
 plaid lavender bags contain 1 posh violet bag, 4 muted yellow bags, 3 bright gold bags.
 bright coral bags contain 3 posh teal bags, 5 wavy purple bags.
 faded aqua bags contain 1 faded black bag.

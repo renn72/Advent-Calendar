@@ -87,7 +87,15 @@ const rulesMap = new Map([...rules])
 const dfsGolden = (rules, bag) => {
   let bagCount = 0
   const bags = rules.get(bag)
-
+  for (const bag of bags) {
+    if (bag[0] !== 'no') {
+      console.log(bagCount)
+      bagCount += +bag[0]
+      console.log(bag)
+      console.log(bagCount)
+      bagCount += +bag[0] * dfsGolden(rules, bag[1])
+    }
+  }
   return bagCount
 }
 
@@ -95,7 +103,7 @@ const howManyGoldBags = (rules) => {
   return dfsGolden(rules, 'shiny gold')
 }
 
-console.table(rulesMap)
+console.log(rulesMap)
 console.log(howManyGoldBags(rulesMap))
 // const testMap = new Map()
 // testMap.set('a', ['b', 'c'])
