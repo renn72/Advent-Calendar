@@ -88,14 +88,16 @@ const jolts = data
   .toString()
   .split('\n')
   .sort((a, b) => a - b)
+  .map((jolt) => +jolt)
 
 const testJolts = testData
   .toString()
   .split('\n')
   .sort((a, b) => a - b)
+  .map((jolt) => +jolt)
 
-console.log(jolts)
-console.log(testJolts)
+// console.log(jolts)
+// console.log(testJolts)
 
 const trackJolts = (jolts) => {
   let oneJump = 1
@@ -116,4 +118,22 @@ const trackJolts = (jolts) => {
 }
 
 // trackJolts(testJolts)
-trackJolts(jolts)
+// trackJolts(jolts)
+
+testJolts.push(52)
+jolts.push(149)
+console.log(testJolts)
+
+const findRoute = (jolts) => {
+  const counter = { 0: 1 }
+  jolts.forEach((jolt) => {
+    console.log(jolt)
+    counter[jolt] =
+      (counter[jolt - 3] ? counter[jolt - 3] : 0) +
+      (counter[jolt - 2] ? counter[jolt - 2] : 0) +
+      (counter[jolt - 1] ? counter[jolt - 1] : 0)
+  })
+  console.log(counter)
+}
+
+findRoute(jolts)
