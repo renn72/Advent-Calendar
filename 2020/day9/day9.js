@@ -87,5 +87,28 @@ const checkSum = (array, sum) => {
   return res
 }
 
+// --- Part Two ---
+
+const magicNum = 14144619
+
+const checkSum2 = (array, num) => {
+  return array.reduce((acc, idx) => acc + idx, 0) === num ? true : false
+}
+
+const findRange = (num, cypher) => {
+  let range = 2
+  while (true) {
+    for (let i = 0; i < cypher.length - range; i++) {
+      let array = cypher.slice(i, i + range)
+      if (checkSum2(array, num)) {
+        let sortedArray = array.sort((a, b) => a - b)
+        return [sortedArray, sortedArray[0] + sortedArray[array.length - 1]]
+      }
+    }
+    range++
+  }
+}
 // checkXmasCode(testCypher, 5)
-checkXmasCode(cypher, 25)
+// checkXmasCode(cypher, 25)
+// console.log(findRange(127, testCypher))
+console.log(findRange(magicNum, cypher))
