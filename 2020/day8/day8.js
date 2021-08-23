@@ -129,7 +129,8 @@ const checkCode = (instructions, instruction, i) => {
   const notVisited = new Set([...Array(instructions.length).keys()])
   while (true) {
     if (!notVisited.has(index)) {
-      if (index > notVisited.size) {
+      console.log(index)
+      if (index >= instructions.length) {
         return acc
       } else {
         return false
@@ -168,7 +169,7 @@ const findFix = (instructions) => {
 
 // console.log(instructions.length)
 // console.log(instructions.slice(0, 100))
-// console.log(findFix(instructions))
-console.log(testInstructions)
-console.log(findFix(testInstructions))
+console.log(findFix(instructions))
+// console.log(testInstructions)
+// console.log(findFix(testInstructions))
 // console.log(parseProgram(instructions))
