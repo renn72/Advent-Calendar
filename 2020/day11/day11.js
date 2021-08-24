@@ -138,7 +138,7 @@ const checkSeat = (seatMap, x, y) => {
   }
 }
 
-const checkMap = (seatMap) => {
+const checkMapPart1 = (seatMap) => {
   const newMap = []
 
   seatMap.forEach((row, x) => {
@@ -190,13 +190,13 @@ const countSeats = (seatMap) => {
   return count
 }
 
-const checkSeatMap = (seatMap) => {
+const checkSeatMapPart1 = (seatMap) => {
   let map = seatMap
   let i = 0
   while (true) {
     i++
     console.log(i)
-    let newMap = checkMap(map)
+    let newMap = checkMapPart1(map)
     if (compareMaps(newMap, map)) {
       console.table(map)
       console.log(countSeats(map))
@@ -206,4 +206,91 @@ const checkSeatMap = (seatMap) => {
   }
 }
 
-checkSeatMap(seatMap)
+const checkSeat2 = (seatMap, x, y) => {
+  const edges = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [1, 1],
+    [1, -1],
+    [-1, 0],
+    [-1, 1],
+    [-1, -1],
+  ]
+  let adjacent = 0
+  edges.forEach((edge) => {
+    const [_x, _y] = edge
+    let xi = x + _x
+    let yi = y + _y
+    let foundAdjacent = false
+    while (isInMap(xi, yi, seatMap) && !foundAdjacent) {
+      if (seatMap[xi][yi] === '#') {
+        adjacent++
+        foundAdjacent = true
+      }
+      if (seatMap[xi][yi] === 'L') {
+        foundAdjacent = true
+      }
+      xi += _x
+      yi += _y
+    }
+  })
+
+  if (adjacent === 0) {
+    return 0
+  } else if (adjacent < 5) {
+    return 1
+  } else {
+    return 2
+  }
+}
+
+const checkMapPart2 = (seatMap) => {
+  const newMap = []
+
+  seatMap.forEach((row, x) => {
+    const newRow = []
+    newMap.push(newRow)
+    row.forEach((seat, y) => {
+      let newSeat = seat
+      if (seat === '.') {
+        newSeat = '.'
+      } else {
+        const res = checkSeat2(seatMap, x, y)
+
+        if (seat === 'L' && res === 0) {
+          newSeat = '#'
+        }
+
+        if (seat === '#' && res === 2) {
+          newSeat = 'L'
+        }
+      }
+      newRow.push(newSeat)
+    })
+  })
+
+  return newMap
+}
+
+const checkSeatMapPart2 = (seatMap) => {
+  let map = seatMap
+  let i = 0
+  while (true) {
+    i++
+    console.log(i)
+    let newMap = checkMapPart2(map)
+    console.table(newMap)
+    if (compareMaps(newMap, map)) {
+      console.table(map)
+      console.log(countSeats(map))
+      return
+    }
+    map = newMap
+  }
+}
+
+// checkSeatMap(seatMap)
+checkSeatMapPart2(testSeatMap)
+
+checkSeatMapPart2(seatMap)
