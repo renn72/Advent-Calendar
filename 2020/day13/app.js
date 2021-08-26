@@ -11,15 +11,14 @@ const findBus = (timetable) => {
     .map((bus) => [bus, Math.ceil(time / bus) * bus - time])
     .reduce((bestTime, idx, i) => {
       if (i === 0) {
-        return idx
+        return [...idx, +idx[0] * idx[1]]
       } else {
         if (bestTime[1] > idx[1]) {
-          return idx
+          return [...idx, +idx[0] * idx[1]]
         }
       }
       return bestTime
     }, [])
-    .map((res) => [...res, +res[0] * res[1]])
 }
 
-console.log(findBus(testData))
+console.log(findBus(data))
