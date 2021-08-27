@@ -7,23 +7,30 @@ const removeValue = (arr, idx) => {
   return arr.slice(0, idx).concat(arr.slice(idx + 1))
 }
 
-const memoryGame = (data, turn = 10) => {
-  for (let i = data.length - 1; i < turn; i++) {
-    const lastNum = data[data.length - 1]
-    let res = 0
-    for (let y = data.length - 2; y >= 0; y--) {
-      if (data[y] === lastNum) {
-        res = data.length - 1 - y
-        console.log('num ' + lastNum + ' index ' + y)
+const memoryGame = (data, turn = 30000000) => {
+  const arr = Array(turn)
 
-        // console.log('res ' + res)
-        break
-      }
-    }
-    data.push(res)
+  for (let i = 0; i < data.length - 1; i++) {
+    let num = data[i]
+    arr[num] = i + 1
   }
-  console.log(data[data.length - 1])
+
+  let lastNum = data[data.length - 1]
+
+  for (let round = data.length; round < turn; round++) {
+    if (!arr[lastNum]) {
+      arr[lastNum] = round
+
+      lastNum = 0
+    } else {
+      let lastRound = arr[lastNum]
+
+      arr[lastNum] = round
+      lastNum = round - lastRound
+    }
+  }
+  console.log(lastNum)
 }
 
 memoryGame([0, 3, 6])
-// memoryGame([15, 5, 1, 4, 7, 0])
+memoryGame([15, 5, 1, 4, 7, 0])
