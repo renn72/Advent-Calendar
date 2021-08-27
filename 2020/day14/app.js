@@ -27,6 +27,12 @@ const maskBinary = (num, mask) => {
     .join('')
 }
 
+const maskBinary2 = (num, mask) => {
+  return mask
+    .split('')
+    .map((n, i) => (n === 'X' ? n : n === '1' ? '1' : num[i]))
+    .join('')
+}
 const getMemIdx = (str) => {
   return str.match(/[0-9]/g).join('')
 }
@@ -50,7 +56,43 @@ const buildMemory = (data) => {
   )
 }
 
-console.log(to36Bit(101))
-console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X')
-buildMemory(testData)
-buildMemory(data)
+const getAddresses = (code) => {
+  let addresses = []
+  addresses.push(code.split(''))
+  for (let i = 0; i < 36; i++) {
+    const newAddresses = []
+    addresses.forEach((address) => {
+      if (address[i] === 'X') {
+        let newAdd = address.join('').split('')
+        newAdd[i] = '1'
+        address[i] = '0'
+        newAddresses.push(newAdd)
+      }
+    })
+    addresses = addresses.concat(newAddresses)
+  }
+  return addresses.map((a) => binaryToDec(a.join('')).toString())
+}
+const buildMemory2 = (data) => {
+  const memory = {}
+  let mask = ''
+  data.forEach((d) => {
+    const [action, value] = d
+    if (action === 'mask') {
+      mask = value
+    } else {
+      const addressCode = maskBinary2(to36Bit(getMemIdx(action)), mask)
+      const addressArr = getAddresses(addressCode)
+      addressArr.forEach((a) => {
+        memory[a] = +value
+      })
+    }
+  })
+  console.log(memory)
+  const mem = Object.values(memory)
+  console.log(mem.reduce((acc, idx) => acc + idx, 0))
+}
+
+// console.log(getAddresses('000000000000000000000000000000X1101X'))
+buildMemory2(testData)
+buildMemory2(data)
