@@ -26,4 +26,23 @@ rules.forEach((r) => {
   )
 })
 
-export { data, ticketRules }
+const testRules = fs
+  .readFileSync('test_rules.txt', 'utf8')
+  .toString()
+  .trim()
+  .split('\n')
+  .map((rule) => rule.split(':'))
+
+const testTicketRules = new Map()
+
+testRules.forEach((r) => {
+  testTicketRules.set(
+    r[0].replace(' ', ''),
+    r[1]
+      .trim()
+      .split(' or ')
+      .map((range) => range.split('-'))
+  )
+})
+
+export { data, ticketRules, testTicketRules }
