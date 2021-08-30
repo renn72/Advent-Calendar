@@ -65,7 +65,7 @@ const findFieldIndex = (tickets, ruleRanges) => {
   const [lowRange, highRange] = ruleRanges
   const ticketSize = tickets[0].length
 
-  for (let idx = 0; idx < ticketSize; idx++) {
+  for (let idx = ticketSize; idx > 0; idx--) {
     let isValid = true
 
     tickets.forEach((ticket) => {
@@ -89,9 +89,9 @@ const findFieldIndex = (tickets, ruleRanges) => {
 const findTicketFields = (tickets, rules) => {
   tickets = validateTickets(tickets)
   let a = 0
-  tickets.forEach((ticket) =>
-    +ticket[1] > 940 ? console.log(+ticket[1]) : (a = 1)
-  )
+  // tickets.forEach((ticket) =>
+  //   +ticket[1] > 940 ? console.log(+ticket[1]) : (a = 1)
+  // )
 
   const ticketMap = []
 
