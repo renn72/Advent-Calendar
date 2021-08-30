@@ -5,13 +5,25 @@ const data = fs
   .toString()
   .trim()
   .split('\n')
-  .map((row) => row.split(''))
+  .map((d) => d.split(','))
 
-const testData = fs
-  .readFileSync('test_data.txt', 'utf8')
+const rules = fs
+  .readFileSync('rules.txt', 'utf8')
   .toString()
   .trim()
   .split('\n')
-  .map((row) => row.split(''))
+  .map((rule) => rule.split(':'))
 
-export { data, testData }
+const ticketRules = new Map()
+
+rules.forEach((r) => {
+  ticketRules.set(
+    r[0].replace(' ', ''),
+    r[1]
+      .trim()
+      .split(' or ')
+      .map((range) => range.split('-'))
+  )
+})
+
+export { data, ticketRules }
