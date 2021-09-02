@@ -1,3 +1,4 @@
+import * as R from 'ramda'
 import { data, ticketRules, testTicketRules } from './input.js'
 
 const myTicket = [
