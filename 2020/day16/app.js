@@ -105,3 +105,4 @@ const findTicketFields = (tickets, rules) => {
 }
 
 findTicketFields(data, ticketRules)
+console.log('object')
