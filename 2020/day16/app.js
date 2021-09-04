@@ -105,4 +105,4 @@ const findTicketFields = (tickets, rules) => {
   // console.log(ticketMap)
 }
 
-findTicketFields(data, ticketRules)
+// findTicketFields(data, ticketRules)
