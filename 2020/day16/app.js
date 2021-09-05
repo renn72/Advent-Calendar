@@ -102,5 +102,5 @@ const findTicketFields = (tickets, rules) => {
 
     ticketMap.push([name, fieldIndex])
   }
-  // console.log(ticketMap)
+  console.log(ticketMap)
 }
